@@ -7,6 +7,7 @@ export interface SelectedCard {
 }
 
 export interface CardData {
+  image: NodeRequire;
   id: string;
 }
 

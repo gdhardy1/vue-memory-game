@@ -37,8 +37,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import Card from "./components/Card.vue";
+import { Deck } from "./Cards";
 import { v4 as uuid } from "uuid";
-import { SelectedCard } from "./interfaces";
+import { SelectedCard, CardData } from "./interfaces";
 
 @Component({
   name: "App",
@@ -56,36 +57,14 @@ export default class App extends Vue {
   cards!: Element[]; // Initialized on component mount
   difficulty: string = "easy";
 
-  cardData: Object[] = [
-    {
-      image: require("./assets/svg/bones.svg"),
-      id: uuid()
-    },
-    {
-      image: require("./assets/svg/arcade.svg"),
-      id: uuid()
-    },
-    {
-      image: require("./assets/svg/planets.svg"),
-      id: uuid()
-    },
-    { image: require("./assets/svg/parka.svg"), id: uuid() },
-    {
-      image: require("./assets/svg/water-bottle.svg"),
-      id: uuid()
-    },
-    {
-      image: require("./assets/svg/Predator.svg"),
-      id: uuid()
-    }
-  ];
+  cardDeck: CardData[] = Deck;
 
   constructor() {
     super();
   }
 
   get deck() {
-    return this.cardData.splice(0, 6);
+    return this.cardDeck.splice(0, 6);
   }
 
   flipCard(payload: SelectedCard) {
