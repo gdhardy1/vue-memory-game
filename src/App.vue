@@ -1,36 +1,36 @@
 <template>
-  <section class="play-area">
+
+  <section
+    id="memory-game"
+    class="memory-game"
+  >
     <div
-      id="memory-game"
-      class="memory-game"
+      class="card-wrapper"
+      v-for="card in deck"
+      :key="`${card.id}-1`"
     >
-      <div
-        class="card-wrapper"
-        v-for="card in cardData"
-        :key="`${card.id}-1`"
-      >
-        <Card
-          :cardData="card"
-          :stack="1"
-          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
-          @flip="flipCard"
-        />
-      </div>
-      <div
-        class="card-wrapper"
-        v-for="card in cardData"
-        :key="`${card.id}-2`"
-      >
-        <Card
-          :cardData="
+      <Card
+        :cardData="card"
+        :stack="1"
+        :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+        @flip="flipCard"
+      />
+    </div>
+    <div
+      class="card-wrapper"
+      v-for="card in deck"
+      :key="`${card.id}-2`"
+    >
+      <Card
+        :cardData="
         card"
-          :stack="2"
-          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
-          @flip="flipCard"
-        />
-      </div>
+        :stack="2"
+        :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+        @flip="flipCard"
+      />
     </div>
   </section>
+
 </template>
 
 <script lang="ts">
@@ -54,6 +54,7 @@ export default class App extends Vue {
   disabled: string[] = [];
   cardsDisabled: boolean = false;
   cards!: Element[]; // Initialized on component mount
+  difficulty: string = "easy";
 
   cardData: Object[] = [
     {
@@ -81,6 +82,10 @@ export default class App extends Vue {
 
   constructor() {
     super();
+  }
+
+  get deck() {
+    return this.cardData.splice(0, 6);
   }
 
   flipCard(payload: SelectedCard) {
@@ -188,30 +193,36 @@ body {
   width: 100%;
 }
 
-.play-area:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
-}
 .memory-game {
-  position: absolute;
-  padding: 50px 50px;
-  margin: auto;
+  position: relative;
+  padding: 10px 20% 0 20%;
 
-  width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 5px;
+  place-items: start;
 
   perspective: 1000px;
 }
 
-.memory-game--medium {
+.memory-game .memory-game--medium {
   grid-template-columns: repeat(4, 1fr);
 }
 
-.memory-game--hard {
+.memory-game .memory-game--hard {
   grid-template-columns: repeat(4, 1fr);
+}
+
+.card-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.card-wrapper::after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  padding-bottom: calc(100% * 3.5 / 2.25);
 }
 </style>

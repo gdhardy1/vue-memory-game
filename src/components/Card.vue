@@ -28,7 +28,7 @@ import { SelectedCard, GameState, CardData } from "../interfaces";
   props: ["cardData", "gameState", "stack"]
 })
 export default class Card extends Vue {
-  reveal: boolean = true;
+  reveal: boolean = false;
   // Props, assert initialization when component created
   cardData!: CardData;
   gameState!: GameState;
@@ -65,8 +65,10 @@ export default class Card extends Vue {
 .memory-card {
   width: 100%;
   height: 100%;
+  border: 2px solid #ffffff;
+  border-radius: 5px;
 
-  position: relative;
+  position: absolute;
   transform: scale(1);
   transform-style: preserve-3d;
   transition: transform 0.5s;
@@ -80,12 +82,12 @@ export default class Card extends Vue {
 .front-face,
 .back-face {
   position: absolute;
-  border: 2px solid #ffffff;
+  background: rgb(6, 125, 172);
+  border-radius: 5px;
   padding: 5px;
   width: 100%;
   height: 100%;
-  border-radius: 5px;
-  background: rgb(6, 125, 172);
+
   backface-visibility: hidden;
 }
 
