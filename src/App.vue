@@ -3,10 +3,12 @@
     <BaseMenu
       @difficulty="setDifficulty"
       :currentLevel="difficulty"
+      :deck="deck"
     />
     <section
       id="memory-game"
       class="memory-game"
+      :class="{'memory-game--hard':difficulty == 'Hard','memory-game--medium':difficulty == 'Medium'}"
     >
       <div
         class="card-wrapper"
@@ -61,7 +63,7 @@ export default class App extends Vue {
   disabled: string[] = [];
   cardsDisabled: boolean = false;
   cards!: Element[]; // Initialized on component mount
-  difficulty: string = "easy";
+  difficulty: string = "Easy";
 
   cardDeck: CardData[] = Deck;
 
@@ -70,7 +72,23 @@ export default class App extends Vue {
   }
 
   get deck() {
-    return this.cardDeck.splice(0, 6);
+    let cardPairs: number;
+    // let newDeck = this.cardDeck.splice(0, this.cardDeck.length);
+
+    switch (this.difficulty) {
+      case "Easy":
+        cardPairs = 6;
+        break;
+      case "Medium":
+        cardPairs = 12;
+        break;
+      case "Hard":
+        cardPairs = 24;
+        break;
+      default:
+        cardPairs = 6;
+    }
+    return this.cardDeck.slice(0, cardPairs);
   }
 
   setDifficulty(level: string) {
@@ -108,7 +126,7 @@ export default class App extends Vue {
       this.unflipCards();
     }
     // Once player matches all cards, the game is won
-    if (this.matches == 6) {
+    if (this.matches == this.deck.length) {
       console.log("YOU WIN!");
     }
   }
@@ -194,12 +212,12 @@ body {
   perspective: 1000px;
 }
 
-.memory-game .memory-game--medium {
-  grid-template-columns: repeat(4, 1fr);
+.memory-game.memory-game--medium {
+  grid-template-columns: repeat(6, 1fr);
 }
 
-.memory-game .memory-game--hard {
-  grid-template-columns: repeat(4, 1fr);
+.memory-game.memory-game--hard {
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .card-wrapper {
