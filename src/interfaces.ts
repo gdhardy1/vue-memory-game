@@ -1,7 +1,7 @@
-import Card from "./components/Card.vue";
+import PlayingCard from "./components/PlayingCard.vue";
 
 export interface SelectedCard {
-  clickedCard?: Card;
+  clickedCard?: PlayingCard;
   id: string;
   stack: string;
 }

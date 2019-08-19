@@ -12,7 +12,7 @@
     />
     <img
       class="back-face"
-      src="../assets/svg/topview.svg"
+      src="../assets/vue.svg"
       alt="JS Badge"
     />
   </div>
@@ -24,10 +24,10 @@ import Component from "vue-class-component";
 import { SelectedCard, GameState, CardData } from "../interfaces";
 
 @Component({
-  name: "Card",
+  name: "PlayingCard",
   props: ["cardData", "gameState", "stack"]
 })
-export default class Card extends Vue {
+export default class PlayingCard extends Vue {
   reveal: boolean = false;
   // Props, assert initialization when component created
   cardData!: CardData;
@@ -50,7 +50,7 @@ export default class Card extends Vue {
       return;
     }
 
-    let clickedCard: Card = this;
+    let clickedCard: PlayingCard = this;
     let id: string = this.cardData.id;
     let stack: string = this.stack;
 
@@ -65,7 +65,7 @@ export default class Card extends Vue {
 .memory-card {
   width: 100%;
   height: 100%;
-  border: 2px solid #ffffff;
+  border: 2px solid #0e0b0b;
   border-radius: 5px;
 
   position: absolute;
@@ -82,7 +82,7 @@ export default class Card extends Vue {
 .front-face,
 .back-face {
   position: absolute;
-  background: rgb(6, 125, 172);
+  background: rgb(255, 255, 255);
   border-radius: 5px;
   padding: 5px;
   width: 100%;

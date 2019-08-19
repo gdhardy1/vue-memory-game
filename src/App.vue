@@ -1,49 +1,55 @@
 <template>
-
-  <section
-    id="memory-game"
-    class="memory-game"
-  >
-    <div
-      class="card-wrapper"
-      v-for="card in deck"
-      :key="`${card.id}-1`"
+  <div>
+    <BaseMenu
+      @difficulty="setDifficulty"
+      :currentLevel="difficulty"
+    />
+    <section
+      id="memory-game"
+      class="memory-game"
     >
-      <Card
-        :cardData="card"
-        :stack="1"
-        :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
-        @flip="flipCard"
-      />
-    </div>
-    <div
-      class="card-wrapper"
-      v-for="card in deck"
-      :key="`${card.id}-2`"
-    >
-      <Card
-        :cardData="
-        card"
-        :stack="2"
-        :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
-        @flip="flipCard"
-      />
-    </div>
-  </section>
+      <div
+        class="card-wrapper"
+        v-for="card in deck"
+        :key="`${card.id}-1`"
+      >
+        <PlayingCard
+          :cardData="card"
+          :stack="1"
+          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+          @flip="flipCard"
+        />
+      </div>
+      <div
+        class="card-wrapper"
+        v-for="card in deck"
+        :key="`${card.id}-2`"
+      >
+        <PlayingCard
+          :cardData="
+          card"
+          :stack="2"
+          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+          @flip="flipCard"
+        />
+      </div>
+    </section>
+  </div>
 
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import Card from "./components/Card.vue";
+import BaseMenu from "./components/layout/BaseMenu.vue";
+import PlayingCard from "./components/PlayingCard.vue";
 import { Deck } from "./Cards";
 import { v4 as uuid } from "uuid";
 import { SelectedCard, CardData } from "./interfaces";
 
 @Component({
   name: "App",
-  components: { Card }
+  components: { BaseMenu, PlayingCard }
 })
 export default class App extends Vue {
   isFlipped: boolean = false; // indicates whether a  card has already been flipped
@@ -65,6 +71,10 @@ export default class App extends Vue {
 
   get deck() {
     return this.cardDeck.splice(0, 6);
+  }
+
+  setDifficulty(level: string) {
+    this.difficulty = level;
   }
 
   flipCard(payload: SelectedCard) {
