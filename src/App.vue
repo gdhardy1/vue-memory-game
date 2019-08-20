@@ -9,7 +9,7 @@
     <section
       id="memory-game"
       class="memory-game"
-      :class="{'memory-game--hard':difficulty == 'Hard','memory-game--medium':difficulty == 'Medium'}"
+      :class="difficultyStyles"
     >
       <div
         class="card-wrapper"
@@ -103,6 +103,13 @@ export default class App extends Vue {
       turns: this.turns,
       matches: this.matches,
       disabled: this.disabled
+    };
+  }
+
+  get difficultyStyles() {
+    return {
+      "memory-game--hard": this.difficulty == "Hard",
+      "memory-game--medium": this.difficulty == "Medium"
     };
   }
 
