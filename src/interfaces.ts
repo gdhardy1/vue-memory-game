@@ -1,7 +1,7 @@
 import PlayingCard from "./components/PlayingCard.vue";
 
 export interface SelectedCard {
-  clickedCard?: PlayingCard;
+  clickedCard?: PlayingCard; // Only needed when emitting flip event from selected card
   id: string;
   stack: string;
 }

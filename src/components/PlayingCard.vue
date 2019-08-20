@@ -22,7 +22,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
-import { SelectedCard, GameState, CardData } from "../interfaces";
+import { GameState, CardData } from "../interfaces";
 import { Prop, Watch } from "vue-property-decorator";
 
 @Component({
@@ -49,6 +49,7 @@ export default class PlayingCard extends Vue {
     if (this.gameState.lockBoard) return;
     // Don't flip card if it has already been matched
     if (this.gameState.disabled.includes(this.cardData.id)) return;
+    // Prevent player from flipping the same card twice in a row
     if (
       this.cardData.id === this.gameState.firstCard.id &&
       this.stack === this.gameState.firstCard.stack
@@ -56,7 +57,7 @@ export default class PlayingCard extends Vue {
       return;
     }
 
-    let clickedCard: PlayingCard = this;
+    let clickedCard: PlayingCard = this; // Pass the card in the payload so it can be flipped back over
     let id: string = this.cardData.id;
     let stack: string = this.stack;
 
