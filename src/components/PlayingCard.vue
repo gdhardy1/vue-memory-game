@@ -21,18 +21,24 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+
 import { SelectedCard, GameState, CardData } from "../interfaces";
+import { Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  name: "PlayingCard",
-  props: ["cardData", "gameState", "stack"]
+  name: "PlayingCard"
 })
 export default class PlayingCard extends Vue {
   reveal: boolean = false;
   // Props, assert initialization when component created
-  cardData!: CardData;
-  gameState!: GameState;
-  stack!: string;
+  @Prop() readonly gameState!: GameState;
+  @Prop() readonly stack!: string;
+  @Prop() readonly cardData!: CardData;
+  @Prop() readonly restart!: number;
+  @Watch("restart", { immediate: true, deep: true })
+  unclipCard(val: string, oldval: string) {
+    this.reveal = false;
+  }
 
   constructor() {
     super();

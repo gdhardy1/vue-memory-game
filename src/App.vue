@@ -2,6 +2,7 @@
   <div>
     <BaseMenu
       @difficulty="setDifficulty"
+      @restart="restartGame"
       :currentLevel="difficulty"
       :deck="deck"
     />
@@ -18,6 +19,7 @@
         <PlayingCard
           :cardData="card"
           :stack="1"
+          :restart="restart"
           :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
           @flip="flipCard"
         />
@@ -31,6 +33,7 @@
           :cardData="
           card"
           :stack="2"
+          :restart="restart"
           :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
           @flip="flipCard"
         />
@@ -64,6 +67,7 @@ export default class App extends Vue {
   cardsDisabled: boolean = false;
   cards!: Element[]; // Initialized on component mount
   difficulty: string = "Easy";
+  restart: number = 0;
 
   cardDeck: CardData[] = Deck;
 
@@ -73,7 +77,6 @@ export default class App extends Vue {
 
   get deck() {
     let cardPairs: number;
-    // let newDeck = this.cardDeck.splice(0, this.cardDeck.length);
 
     switch (this.difficulty) {
       case "Easy":
@@ -151,6 +154,11 @@ export default class App extends Vue {
       { id: "null", stack: "1" },
       { id: "null", stack: "2" }
     ];
+  }
+
+  restartGame() {
+    this.resetBoard();
+    this.restart += 1;
   }
 
   // Shuffle position of cards on game load
