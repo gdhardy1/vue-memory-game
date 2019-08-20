@@ -20,7 +20,7 @@
           :cardData="card"
           :stack="1"
           :restart="restart"
-          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+          :gameState="gameState"
           @flip="flipCard"
         />
       </div>
@@ -34,7 +34,7 @@
           card"
           :stack="2"
           :restart="restart"
-          :gameState="{isFlipped,firstCard,secondCard,lockBoard,turns,matches,disabled}"
+          :gameState="gameState"
           @flip="flipCard"
         />
       </div>
@@ -57,7 +57,7 @@ import { SelectedCard, CardData } from "./interfaces";
   components: { BaseMenu, PlayingCard }
 })
 export default class App extends Vue {
-  isFlipped: boolean = false; // indicates whether a  card has already been flipped
+  firstIsFlipped: boolean = false; // indicates whether a  card has already been flipped
   firstCard: SelectedCard = { id: "null", stack: "1" };
   secondCard: SelectedCard = { id: "null", stack: "2" }; // first and second card clicked
   lockBoard: boolean = false; // Use to determine if player should be allowed to flip cards
@@ -77,7 +77,7 @@ export default class App extends Vue {
 
   get deck() {
     let cardPairs: number;
-
+    // choose deck size based on difficulty level
     switch (this.difficulty) {
       case "Easy":
         cardPairs = 6;
@@ -94,6 +94,18 @@ export default class App extends Vue {
     return this.cardDeck.slice(0, cardPairs);
   }
 
+  get gameState() {
+    return {
+      firstIsFlipped: this.firstIsFlipped,
+      firstCard: this.firstCard,
+      secondCard: this.secondCard,
+      lockBoard: this.lockBoard,
+      turns: this.turns,
+      matches: this.matches,
+      disabled: this.disabled
+    };
+  }
+
   setDifficulty(level: string) {
     this.difficulty = level;
   }
@@ -101,17 +113,18 @@ export default class App extends Vue {
   flipCard(payload: SelectedCard) {
     let { clickedCard, id, stack } = payload;
 
-    // If no card has been flipped
-    if (!this.isFlipped) {
-      // Set isFlipped condition to true
-      this.isFlipped = true;
+    // If first card has not been flipped
+    if (!this.firstIsFlipped) {
+      // Set the first card flipped
+      this.firstIsFlipped = true;
       this.firstCard = payload;
     } else {
-      // If a card is already flipped
-      this.isFlipped = false;
+      // Set second card flipped
       this.secondCard = payload;
-      this.turns++; // Increase turn counter
-
+      // Reset firstIsFlipped for next turn
+      this.firstIsFlipped = false;
+      // Increase turn counter
+      this.turns++;
       // check if first and second cards match
       this.checkForMatch();
     }
@@ -123,9 +136,12 @@ export default class App extends Vue {
 
     // If cards match
     if (isMatch) {
+      // Disable cards so they can't be flipped again
       this.disabled.push(this.firstCard.id);
-      this.matches++; // increase match counter
+      // increase match counter
+      this.matches++;
     } else {
+      // Turn cards back over
       this.unflipCards();
     }
     // Once player matches all cards, the game is won
@@ -149,7 +165,7 @@ export default class App extends Vue {
 
   // Resets intial conditions for game
   resetBoard() {
-    [this.isFlipped, this.lockBoard] = [false, false];
+    [this.firstIsFlipped, this.lockBoard] = [false, false];
     [this.firstCard, this.secondCard] = [
       { id: "null", stack: "1" },
       { id: "null", stack: "2" }
@@ -158,7 +174,11 @@ export default class App extends Vue {
 
   restartGame() {
     this.resetBoard();
+    // PlayingCards watch this value to know when game has restarted
     this.restart += 1;
+    // Restart counters
+    this.matches = 0;
+    this.turns = 0;
   }
 
   // Shuffle position of cards on game load
