@@ -6,6 +6,14 @@
       :currentLevel="difficulty"
       :deck="deck"
     />
+    <transition name="fade">
+      <div
+        class="you-win"
+        v-if="winState"
+      >
+        <div class="you-win__text">You Win!!!</div>
+      </div>
+    </transition>
     <section
       id="memory-game"
       class="memory-game"
@@ -68,7 +76,7 @@ export default class App extends Vue {
   cards!: Element[]; // Initialized on component mount
   difficulty: string = "Easy";
   restart: number = 0;
-
+  winState: boolean = false;
   cardDeck: CardData[] = Deck;
 
   constructor() {
@@ -80,7 +88,7 @@ export default class App extends Vue {
     // choose deck size based on difficulty level
     switch (this.difficulty) {
       case "Easy":
-        cardPairs = 6;
+        cardPairs = 2;
         break;
       case "Medium":
         cardPairs = 12;
@@ -153,7 +161,7 @@ export default class App extends Vue {
     }
     // Once player matches all cards, the game is won
     if (this.matches == this.deck.length) {
-      console.log("YOU WIN!");
+      this.winState = true;
     }
   }
 
@@ -183,10 +191,14 @@ export default class App extends Vue {
     this.resetBoard();
     // PlayingCards watch this value to know when game has restarted
     this.restart += 1;
-    // Restart counters
+    // Reset to defaul values
     this.matches = 0;
     this.turns = 0;
+    this.winState = false;
+    this.disabled = [];
   }
+
+  youWin() {}
 
   // Shuffle position of cards on game load
   shuffle() {
@@ -266,5 +278,23 @@ body {
   width: 0;
   height: 0;
   padding-bottom: calc(100% * 3.5 / 2.25);
+}
+
+.you-win {
+  position: absolute;
+}
+
+.you-win__text {
+  position: relative;
+
+  margin: auto;
+  font-size: 40px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s, font-size 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
