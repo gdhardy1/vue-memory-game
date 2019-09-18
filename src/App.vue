@@ -71,17 +71,18 @@ export default class App extends Vue {
     // choose deck size based on difficulty level
     switch (this.difficulty) {
       case "Easy":
-        cardPairs = 2;
+        cardPairs = 8;
         break;
       case "Medium":
-        cardPairs = 12;
+        cardPairs = 18;
         break;
       case "Hard":
-        cardPairs = 24;
+        cardPairs = 32;
         break;
       default:
-        cardPairs = 6;
+        cardPairs = 8;
     }
+
     return this.cardDeck.slice(0, cardPairs);
   }
 
@@ -104,19 +105,13 @@ export default class App extends Vue {
     };
   }
 
+  // called when BaseMenue emits custom @difficult event
   setDifficulty(level: string) {
     this.difficulty = level;
-    let callback = this.shuffle;
-
-    // Shuffle cards when difficulty changes
-    // Wait for card flip animation to complete so that
-    // new card position is not revelead inadvertently
-    setTimeout(() => {
-      // wait for next tick to ensure all new cards have mounted
-      this.$nextTick(callback);
-    }, 700);
+    this.restartGame();
   }
 
+  // called when PlayingCard emits custom @flip event
   flipCard(payload: SelectedCard) {
     let { clickedCard, id, stack } = payload;
 
@@ -183,30 +178,60 @@ export default class App extends Vue {
     this.resetBoard();
     // PlayingCards watch this value to know when game has restarted
     this.restart += 1;
-    // Reset to defaul values
+    // Reset to default values
     this.matches = 0;
     this.turns = 0;
     this.winState = false;
     this.disabled = [];
+    this.shuffle(700);
   }
 
   // youWin() {}
 
-  // Shuffle position of cards on game load
-  shuffle() {
-    // Assert non-null since we wait for mount
-    Array.from(
-      document.getElementsByClassName("memory-game")[0]!.children
-    ).forEach(value => {
-      let randomPos: string = Math.floor(Math.random() * 100).toString();
-      let card: HTMLElement = value as HTMLElement;
-      card.style.order = randomPos;
-    });
-    Math.random;
+  // Shuffle position of cards
+  shuffle(delay: number = 0) {
+    let callback: Function = () => {
+      // Assert non-null since function only excutes on app mount or
+      // after card flip animation completes
+      Array.from(
+        document.getElementsByClassName("memory-game")[0]!.children
+      ).forEach(value => {
+        let randomPos: string = Math.floor(Math.random() * 100).toString();
+        let card: HTMLElement = value as HTMLElement;
+        card.style.order = randomPos;
+      });
+    };
+
+    setTimeout(callback, delay);
+  }
+
+  sizeGameBoard() {
+    let gameBoard: HTMLElement = document.getElementsByClassName(
+      "memory-game"
+    )[0] as HTMLElement;
+    let winHeight: number = window.innerHeight;
+    let winWidth: number = window.innerWidth;
+
+    if (winHeight <= winWidth) {
+      gameBoard.style.paddingLeft =
+        ((winWidth - winHeight + 100) / 2).toString() + "px";
+      gameBoard.style.paddingRight =
+        ((winWidth - winHeight + 100) / 2).toString() + "px";
+    } else {
+      gameBoard.style.paddingLeft = "30px";
+      gameBoard.style.paddingRight = "30px";
+    }
   }
 
   mounted() {
     this.shuffle();
+    this.sizeGameBoard();
+
+    window.onresize = this.sizeGameBoard;
+  }
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.sizeGameBoard);
   }
 }
 </script>
@@ -240,11 +265,14 @@ body {
 }
 
 .memory-game {
-  position: relative;
-  padding: 10px 20% 0 20%;
+  position: fixed;
+  top: 50px;
+  left: 10px;
+  right: 10px;
 
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+
   grid-gap: 5px;
   place-items: start;
 
