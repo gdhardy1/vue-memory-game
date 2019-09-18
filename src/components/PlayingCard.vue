@@ -1,20 +1,12 @@
 <template>
   <div
     class="memory-card"
-    :class="{flip: reveal}"
+    :class="{ flip: reveal }"
     :data-framework="cardData.framework"
     @click="flip"
   >
-    <img
-      class="front-face"
-      :src="cardData.image"
-      :alt="cardData.framework"
-    />
-    <img
-      class="back-face"
-      src="../assets/vue.svg"
-      alt="JS Badge"
-    />
+    <img class="front-face" :src="cardData.image" :alt="cardData.framework" />
+    <img class="back-face" src="../assets/vue.svg" alt="JS Badge" />
   </div>
 </template>
 

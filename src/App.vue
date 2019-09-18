@@ -7,23 +7,12 @@
       :deck="deck"
     />
     <transition name="fade">
-      <div
-        class="you-win"
-        v-if="winState"
-      >
+      <div class="you-win" v-if="winState">
         <div class="you-win__text">You Win!!!</div>
       </div>
     </transition>
-    <section
-      id="memory-game"
-      class="memory-game"
-      :class="difficultyStyles"
-    >
-      <div
-        class="card-wrapper"
-        v-for="card in deck"
-        :key="`${card.id}-1`"
-      >
+    <section id="memory-game" class="memory-game" :class="difficultyStyles">
+      <div class="card-wrapper" v-for="card in deck" :key="`${card.id}-1`">
         <PlayingCard
           :cardData="card"
           :stack="1"
@@ -32,14 +21,9 @@
           @flip="flipCard"
         />
       </div>
-      <div
-        class="card-wrapper"
-        v-for="card in deck"
-        :key="`${card.id}-2`"
-      >
+      <div class="card-wrapper" v-for="card in deck" :key="`${card.id}-2`">
         <PlayingCard
-          :cardData="
-          card"
+          :cardData="card"
           :stack="2"
           :restart="restart"
           :gameState="gameState"
@@ -48,7 +32,6 @@
       </div>
     </section>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -123,6 +106,15 @@ export default class App extends Vue {
 
   setDifficulty(level: string) {
     this.difficulty = level;
+    let callback = this.shuffle;
+
+    // Shuffle cards when difficulty changes
+    // Wait for card flip animation to complete so that
+    // new card position is not revelead inadvertently
+    setTimeout(() => {
+      // wait for next tick to ensure all new cards have mounted
+      this.$nextTick(callback);
+    }, 700);
   }
 
   flipCard(payload: SelectedCard) {
@@ -198,22 +190,22 @@ export default class App extends Vue {
     this.disabled = [];
   }
 
-  youWin() {}
+  // youWin() {}
 
   // Shuffle position of cards on game load
   shuffle() {
-    this.cards.forEach(value => {
+    // Assert non-null since we wait for mount
+    Array.from(
+      document.getElementsByClassName("memory-game")[0]!.children
+    ).forEach(value => {
       let randomPos: string = Math.floor(Math.random() * 100).toString();
-      let card: HTMLElement = <HTMLElement>value;
+      let card: HTMLElement = value as HTMLElement;
       card.style.order = randomPos;
     });
     Math.random;
   }
 
   mounted() {
-    // Assert non-null since we wait for mount
-    this.cards = Array.from(document.getElementById("memory-game")!.children);
-
     this.shuffle();
   }
 }
@@ -277,7 +269,8 @@ body {
   display: inline-block;
   width: 0;
   height: 0;
-  padding-bottom: calc(100% * 3.5 / 2.25);
+  /* padding-bottom: calc(100% * 3.5 / 2.25); */
+  padding-bottom: 100%;
 }
 
 .you-win {
