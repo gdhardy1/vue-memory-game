@@ -28,7 +28,7 @@ export default class PlayingCard extends Vue {
   @Prop() readonly cardData!: CardData;
   @Prop() readonly restart!: number;
   @Watch("restart", { immediate: true, deep: true })
-  unclipCard(val: string, oldval: string) {
+  unflipCard(val: string, oldval: string) {
     this.reveal = false;
   }
 
