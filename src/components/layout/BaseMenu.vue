@@ -2,14 +2,14 @@
   <div class="menu">
     <button
       class="btn difficulty"
-      v-for="level in difficultyLevels"
+      v-for="(level, index) in difficultyLevels"
       @click="changeDifficulty(level)"
-      :class="{active: currentLevel == level}"
-    >{{level}}</button>
-    <button
-      class="btn reset"
-      @click="$emit('restart')"
-    >New Game</button>
+      :class="{ active: currentLevel == level }"
+      :key="index"
+    >
+      {{ level }}
+    </button>
+    <button class="btn reset" @click="$emit('restart')">New Game</button>
   </div>
 </template>
 
@@ -36,5 +36,4 @@ export default class BaseMenu extends Vue {
 }
 </script>
 
-<style>
-</style>
+<style></style>
