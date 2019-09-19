@@ -81,7 +81,7 @@ export default class PlayingCard extends Vue {
 .front-face,
 .back-face {
   position: absolute;
-  background: rgb(255, 255, 255);
+  background: #fff;
   border-radius: 5px;
   padding: 5px;
   width: 100%;
