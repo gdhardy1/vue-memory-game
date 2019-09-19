@@ -256,7 +256,7 @@ export default class App extends Vue {
 
 body {
   height: 100vh;
-  background-color: #d1d1d1;
+  background-color: #fff;
 }
 
 .play-area {
@@ -266,7 +266,7 @@ body {
 
 .memory-game {
   position: fixed;
-  top: 50px;
+  top: 70px;
   left: 10px;
   right: 10px;
 
