@@ -8,7 +8,7 @@
     />
     <transition name="fade">
       <div class="you-win" v-if="winState">
-        <div class="you-win__text">You Win!!!</div>
+        <p class="you-win__text">You Win!!!</p>
       </div>
     </transition>
     <section id="memory-game" class="memory-game" :class="difficultyStyles">
@@ -236,27 +236,15 @@ export default class App extends Vue {
 }
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
+<style lang="scss">
 /* Reset */
-
+body {
+  font-family: system-ui;
+}
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
-
-body {
-  height: 100vh;
-  background-color: #fff;
 }
 
 .play-area {
@@ -277,40 +265,51 @@ body {
   place-items: start;
 
   perspective: 1000px;
-}
 
-.memory-game.memory-game--medium {
-  grid-template-columns: repeat(6, 1fr);
-}
+  &--medium {
+    grid-template-columns: repeat(6, 1fr);
+  }
 
-.memory-game.memory-game--hard {
-  grid-template-columns: repeat(8, 1fr);
+  &--hard {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 
 .card-wrapper {
   position: relative;
   width: 100%;
-}
 
-.card-wrapper::after {
-  content: "";
-  display: inline-block;
-  width: 0;
-  height: 0;
-  /* padding-bottom: calc(100% * 3.5 / 2.25); */
-  padding-bottom: 100%;
+  &::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    /* padding-bottom: calc(100% * 3.5 / 2.25); */
+    padding-bottom: 100%;
+  }
 }
 
 .you-win {
-  position: absolute;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  background: rgba(65, 184, 131, 0.8);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  &__text {
+    color: #fff;
+    margin: auto;
+    font-size: 60px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #34495e;
+  }
 }
 
-.you-win__text {
-  position: relative;
-
-  margin: auto;
-  font-size: 40px;
-}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s, font-size 0.5s;
