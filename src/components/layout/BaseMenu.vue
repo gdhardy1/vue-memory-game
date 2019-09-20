@@ -81,11 +81,11 @@ export default class BaseMenu extends Vue {
   top: 0;
   left: calc(100vw - 60px);
 
-  z-index: 1;
+  z-index: 2;
   width: 60px;
   height: 60px;
   padding: 16px;
-  background: black;
+  background: #34495e;
 
   align-items: center;
 
@@ -99,13 +99,16 @@ export default class BaseMenu extends Vue {
     top: 0;
     left: 0;
   }
+  @media only screen and (min-width: 601px) {
+    display: none;
+  }
 }
 
 .menu {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
 
   &__content {
     position: fixed;
@@ -118,6 +121,12 @@ export default class BaseMenu extends Vue {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media only screen and (min-width: 601px) {
+      display: block;
+      visibility: visible;
+      height: auto;
+    }
   }
 
   &__items {
@@ -127,6 +136,11 @@ export default class BaseMenu extends Vue {
     grid-gap: 10px;
     padding: 10px;
     background: #41b883;
+
+    @media only screen and (min-width: 601px) {
+      grid-template-columns: repeat(4, 1fr);
+      width: 100vw;
+    }
   }
 
   &__overlay {
@@ -140,25 +154,44 @@ export default class BaseMenu extends Vue {
     justify-content: center;
     transform: scale(0);
     transition: all 0.7s ease;
-  }
 
-  &__overlay-inner {
-    text-align: center;
-    max-width: 90vw;
-    max-height: 100vh;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    &-inner {
+      text-align: center;
+      max-width: 90vw;
+      max-height: 100vh;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+
+      @media only screen and (min-width: 601px) {
+        opacity: 1;
+        transition: none;
+      }
+    }
+
+    @media only screen and (min-width: 601px) {
+      display: block;
+      border-radius: 0;
+      height: auto;
+      width: auto;
+      background: transparent;
+      transform: scale(1);
+      transition: none;
+    }
   }
 
   &__toggle {
     position: absolute;
     top: 0;
     left: calc(100vw - 60px);
-    z-index: 2;
+    z-index: 3;
     cursor: pointer;
     width: 60px;
     height: 60px;
     opacity: 0;
+
+    @media only screen and (min-width: 601px) {
+      display: none;
+    }
   }
 }
 
