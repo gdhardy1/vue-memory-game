@@ -1,8 +1,8 @@
-var express = require("express");
-var path = require("path");
-var serveStatic = require("serve-static");
+const express = require("express");
+
+let port = process.env.PORT || 5000;
+
 app = express();
-app.use(serveStatic(__dirname + "/dist"));
-var port = process.env.PORT || 5000;
+app.use(express.static(__dirname + "/dist"));
 app.listen(port);
-console.log("server started " + port);
+console.log("Server listening on port " + port);
