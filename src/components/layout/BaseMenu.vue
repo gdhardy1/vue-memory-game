@@ -246,13 +246,13 @@ button,
   border-radius: 4px;
   border: 1px solid #bbb;
   cursor: pointer;
-}
 
-button:hover,
-.button:focus {
-  color: #fff;
-  border-color: #888;
-  background-color: #34495e;
-  outline: 0;
+  &:hover,
+  &:focus {
+    color: #fff;
+    border-color: #888;
+    background-color: #34495e;
+    outline: 0;
+  }
 }
 </style>
