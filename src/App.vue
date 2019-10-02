@@ -11,7 +11,12 @@
         <p class="you-win__text">You Win!!!</p>
       </div>
     </transition>
-    <section id="memory-game" class="memory-game" :class="difficultyStyles">
+    <section
+      ref="memoryGame"
+      id="memory-game"
+      class="memory-game"
+      :class="difficultyStyles"
+    >
       <div class="card-wrapper" v-for="card in deck" :key="`${card.id}-1`">
         <PlayingCard
           :cardData="card"
@@ -41,7 +46,7 @@ import BaseMenu from "./components/layout/BaseMenu.vue";
 import PlayingCard from "./components/PlayingCard.vue";
 import { Deck } from "./Cards";
 import { v4 as uuid } from "uuid";
-import { SelectedCard, CardData } from "./interfaces";
+import { CardData } from "./interfaces";
 
 @Component({
   name: "App",
@@ -49,8 +54,8 @@ import { SelectedCard, CardData } from "./interfaces";
 })
 export default class App extends Vue {
   firstIsFlipped: boolean = false; // indicates whether a  card has already been flipped
-  firstCard: SelectedCard = { id: "null", stack: "1" };
-  secondCard: SelectedCard = { id: "null", stack: "2" }; // first and second card clicked
+  firstCard: PlayingCard | null = null;
+  secondCard: PlayingCard | null = null; // first and second card clicked
   lockBoard: boolean = false; // Use to determine if player should be allowed to flip cards
   turns: number = 0; // counts number of turns taken
   matches: number = 0; // used to determine if win condition has been met
@@ -112,17 +117,15 @@ export default class App extends Vue {
   }
 
   // called when PlayingCard emits custom @flip event
-  flipCard(payload: SelectedCard) {
-    let { clickedCard, id, stack } = payload;
-
+  flipCard(clickedCard: PlayingCard) {
     // If first card has not been flipped
     if (!this.firstIsFlipped) {
       // Set the first card flipped
       this.firstIsFlipped = true;
-      this.firstCard = payload;
+      this.firstCard = clickedCard;
     } else {
       // Set second card flipped
-      this.secondCard = payload;
+      this.secondCard = clickedCard;
       // Reset firstIsFlipped for next turn
       this.firstIsFlipped = false;
       // Increase turn counter
@@ -134,12 +137,13 @@ export default class App extends Vue {
 
   checkForMatch() {
     // Executes after second card is flipped
-    let isMatch: boolean = this.firstCard.id === this.secondCard.id;
+    let isMatch: boolean =
+      this.firstCard!.cardData.id === this.secondCard!.cardData.id;
 
     // If cards match
     if (isMatch) {
       // Disable cards so they can't be flipped again
-      this.disabled.push(this.firstCard.id);
+      this.disabled.push(this.firstCard!.cardData.id);
       // increase match counter
       this.matches++;
     } else {
@@ -157,9 +161,8 @@ export default class App extends Vue {
 
     // Turn cards back to face down
     setTimeout(() => {
-      this.firstCard.clickedCard!.reveal = !this.firstCard.clickedCard!.reveal;
-      this.secondCard.clickedCard!.reveal = !this.secondCard.clickedCard!
-        .reveal;
+      this.firstCard!.reveal = false;
+      this.secondCard!.reveal = false;
 
       this.resetBoard();
     }, 1500);
@@ -168,10 +171,7 @@ export default class App extends Vue {
   // Resets intial conditions for game
   resetBoard() {
     [this.firstIsFlipped, this.lockBoard] = [false, false];
-    [this.firstCard, this.secondCard] = [
-      { id: "null", stack: "1" },
-      { id: "null", stack: "2" }
-    ];
+    [this.firstCard, this.secondCard] = [null, null];
   }
 
   restartGame() {
@@ -206,9 +206,7 @@ export default class App extends Vue {
   }
 
   sizeGameBoard() {
-    let gameBoard: HTMLElement = document.getElementsByClassName(
-      "memory-game"
-    )[0] as HTMLElement;
+    let gameBoard: HTMLElement = this.$refs.memoryGame as HTMLElement;
     let winHeight: number = window.innerHeight;
     let winWidth: number = window.innerWidth;
 
