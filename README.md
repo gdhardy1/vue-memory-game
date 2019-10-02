@@ -1,29 +1,17 @@
-# memory-game
+# Vue Memory
 
-## Project setup
-```
-npm install
-```
+The classic Memory game built on Vue.js. Play at [vue-memory.herokuapp.com](http://vue-memory.herokuapp.com).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## About the Project
 
-### Compiles and minifies for production
-```
-npm run build
-```
+I built the app to mainly familiarize myself with class-style component syntax in Vue. I also explored Vue's TypeScript support and single-file component testing with the Jest framework.
 
-### Run your tests
-```
-npm run test
-```
+### Technologies Used
 
-### Lints and fixes files
-```
-npm run lint
-```
+The project makes use of the following technologies:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- Vue.js
+- TypeScript
+- Jest
+- Sass
+- Express
