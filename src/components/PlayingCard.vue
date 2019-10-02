@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="memory-card"
-    :class="{ flip: reveal }"
-    :data-framework="cardData.framework"
-    @click="flip"
-  >
+  <div class="memory-card" :class="{ flip: reveal }" @click="flip">
     <img class="front-face" :src="cardData.image" :alt="cardData.framework" />
     <img class="back-face" src="../assets/vue.svg" alt="JS Badge" />
   </div>
@@ -38,29 +33,27 @@ export default class PlayingCard extends Vue {
 
   flip(e: MouseEvent) {
     // Player should not be able to flip cards when the board is locked
-    if (this.gameState.lockBoard) return;
+    if (this.gameState.lockBoard) return "Board Locked";
     // Don't flip card if it has already been matched
-    if (this.gameState.disabled.includes(this.cardData.id)) return;
+    if (this.gameState.disabled.includes(this.cardData.id))
+      return "Card matched already";
     // Prevent player from flipping the same card twice in a row
     if (
-      this.cardData.id === this.gameState.firstCard.id &&
+      this.gameState.firstCard && // first card has been selected
+      this.cardData.id === this.gameState.firstCard.cardData.id &&
       this.stack === this.gameState.firstCard.stack
     ) {
-      return;
+      return "Click a different card";
     }
 
-    let clickedCard: PlayingCard = this; // Pass the card in the payload so it can be flipped back over
-    let id: string = this.cardData.id;
-    let stack: string = this.stack;
-
-    this.$emit("flip", { clickedCard, id, stack });
+    this.$emit("flip", this); // Pass the card in the payload so it can be flipped back over
     this.reveal = !this.reveal;
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
 .memory-card {
   width: 100%;
   height: 100%;
@@ -71,11 +64,16 @@ export default class PlayingCard extends Vue {
   transform: scale(1);
   transform-style: preserve-3d;
   transition: transform 0.5s;
-}
 
-.memory-card:active {
-  transform: scale(0.97);
-  transition: transform 0.2s;
+  &:active {
+    transform: scale(0.97);
+    transition: transform 0.2s;
+  }
+
+  &.flip {
+    transform: rotateY(180deg);
+    transition: 0.5s;
+  }
 }
 
 .front-face,
@@ -92,10 +90,5 @@ export default class PlayingCard extends Vue {
 
 .front-face {
   transform: rotateY(180deg);
-}
-
-.memory-card.flip {
-  transform: rotateY(180deg);
-  transition: 0.5s;
 }
 </style>
